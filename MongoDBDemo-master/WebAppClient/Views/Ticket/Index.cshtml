@@ -1,0 +1,53 @@
+﻿@model WebAppClient.ViewModels.TicketsVM
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>All Users</h2>
+
+<p>
+    @Html.ActionLink("Add New Ticket", "Create")
+</p>
+
+<table class="table">
+    <tr>
+        <th>
+            <p>Id</p>
+        </th>
+        <th>
+            <p>Date</p>
+        </th>
+        <th>
+            <p>Subject</p>
+        </th>
+        <th>
+            <p>User</p>
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model.lstTickets)
+    {
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.Id)
+    <td>
+        @Html.DisplayFor(modelItem => item.DateTime)
+    <td>
+        @Html.DisplayFor(modelItem => item.Subject)
+    <td>
+        @Html.DisplayFor(modelItem => item.User)
+    <td>
+        @Html.ActionLink("Edit", "Edit", new { Id = item.Id }) |
+        @Html.ActionLink("Delete", "Delete", new { Id = item.Id })
+    </td>
+</tr>
+    }
+
+</table>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
