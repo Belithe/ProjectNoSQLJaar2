@@ -4,11 +4,18 @@
     ViewData["Title"] = "Index";
 }
 
-<h2>All Users</h2>
+<h2>All Tickets</h2>
 
 <p>
     @Html.ActionLink("Add New Ticket", "Create")
 </p>
+
+@using (Html.BeginForm())
+{
+    @Html.TextBoxFor(x => x.TextSearch, new { placeholder = "Search", required = "required" })
+    @Html.ValidationMessageFor(x => x.TextSearch)
+    <button type="submit">Search</button>
+}
 
 <table class="table">
     <tr>
@@ -24,25 +31,24 @@
         <th>
             <p>User</p>
         </th>
-        <th></th>
     </tr>
 
     @foreach (var item in Model.lstTickets)
     {
-<tr>
-    <td>
-        @Html.DisplayFor(modelItem => item.Id)
-    <td>
-        @Html.DisplayFor(modelItem => item.DateTime)
-    <td>
-        @Html.DisplayFor(modelItem => item.Subject)
-    <td>
-        @Html.DisplayFor(modelItem => item.User)
-    <td>
-        @Html.ActionLink("Edit", "Edit", new { Id = item.Id }) |
-        @Html.ActionLink("Delete", "Delete", new { Id = item.Id })
-    </td>
-</tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            <td>
+                @Html.DisplayFor(modelItem => item.DateTime)
+            <td>
+                @Html.DisplayFor(modelItem => item.Subject)
+            <td>
+                @Html.DisplayFor(modelItem => item.User)
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { Id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { Id = item.Id })
+            </td>
+        </tr>
     }
 
 </table>

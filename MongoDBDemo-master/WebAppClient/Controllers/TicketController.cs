@@ -16,6 +16,7 @@ namespace WebAppClient.Controllers
 {
     public class TicketController : Controller
     {
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             HttpClient client = MVCClientHttpClient.GetClient();
@@ -34,6 +35,32 @@ namespace WebAppClient.Controllers
             }
 
             return View(ticketsVM);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Index(TicketsVM model)
+        {
+            if (ModelState.IsValid && !string.IsNullOrEmpty(model.TextSearch))
+            {
+                HttpClient client = MVCClientHttpClient.GetClient();
+                HttpResponseMessage userResponse = await client.GetAsync("api/ticket/");
+
+                if (userResponse.IsSuccessStatusCode)
+                {
+                    string Content = await userResponse.Content.ReadAsStringAsync();
+                    var result = JsonConvert.DeserializeObject<IEnumerable<Ticket>>(Content);
+                    model.lstTickets = result.Where(x => x.Subject.Contains(model.TextSearch));
+                }
+                else
+                {
+                    return Content("An error occurred.");
+                }
+                return View(model);
+            }
+            else
+            {
+                return View(new TicketsVM());
+            }
         }
 
         public async Task<IActionResult> CountThem()
