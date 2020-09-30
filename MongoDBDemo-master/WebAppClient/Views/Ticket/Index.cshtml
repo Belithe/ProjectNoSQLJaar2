@@ -17,39 +17,49 @@
     <button type="submit">Search</button>
 }
 
-<table class="table">
-    <tr>
-        <th>
-            <p>Id</p>
-        </th>
-        <th>
-            <p>Date</p>
-        </th>
-        <th>
-            <p>Subject</p>
-        </th>
-        <th>
-            <p>User</p>
-        </th>
-    </tr>
+<input type="button"
+       id="filterButton"
+       value="Filter"
+       onclick="location.href='@Url.Action("Index", "TicketController")'" />
 
-    @foreach (var item in Model.lstTickets)
-    {
+<table class="table">
+    <thead>
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            <td>
-                @Html.DisplayFor(modelItem => item.DateTime)
-            <td>
-                @Html.DisplayFor(modelItem => item.Subject)
-            <td>
-                @Html.DisplayFor(modelItem => item.User)
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { Id = item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { Id = item.Id })
-            </td>
+            
+            <th>
+                <p>Id</p>
+            </th>
+            <th>
+                <p>Date</p>
+            </th>
+            <th>
+                <p>Subject</p>
+            </th>
+            <th>
+                <p>User</p>
+            </th>
         </tr>
-    }
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model.lstTickets.OrderByDescending(item => item.Priority).ThenByDescending(x => x.DateTime))
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateTime)
+                <td>
+                    @Html.DisplayFor(modelItem => item.Subject)
+                <td>
+                    @Html.DisplayFor(modelItem => item.User)
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { Id = item.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { Id = item.Id })
+                </td>
+            </tr>
+        }
+    </tbody>
 
 </table>
 

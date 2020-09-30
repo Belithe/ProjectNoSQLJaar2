@@ -63,6 +63,44 @@ namespace WebAppClient.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Index(string FilterDate, TicketsVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                HttpClient client = MVCClientHttpClient.GetClient();
+                HttpResponseMessage userResponse = await client.GetAsync("api/Ticket/Search");
+                 
+                if (userResponse.IsSuccessStatusCode)
+                {
+                    string Content = await userResponse.Content.ReadAsStringAsync();
+                    model.lstTickets = JsonConvert.DeserializeObject<IEnumerable<Ticket>>(Content);
+
+                    if (FilterDate == "Filter")
+                    {
+                        ViewBag.filtering = true;
+                    }
+                    else
+                    {
+                        ViewBag.filtering = false;
+                    }
+                }
+                else
+                {
+                    return Content("An error occurred.");
+                }
+
+                return View(model);
+            }
+            else
+            {
+                return View(new TicketsVM());
+            }
+            //
+
+
+        }
+
         public async Task<IActionResult> CountThem()
         {
             long noOfTickets;

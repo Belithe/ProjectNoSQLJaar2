@@ -11,6 +11,7 @@ namespace Models
         public string LastName { get; set; }
         public UserEnum Type { get; set; }
         public string EmailAdress { get; set; }
+        public string Password { get; set; }
         public long Phonenumber { get; set; }
         public string Location { get; set; }
 
