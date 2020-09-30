@@ -23,7 +23,6 @@ namespace WebAppClient.Controllers
 
             UsersVM AllUsersVM = new UsersVM();
 
-
             if (userResponse.IsSuccessStatusCode)
             {
                 string Content = await userResponse.Content.ReadAsStringAsync();
