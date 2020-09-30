@@ -1,16 +1,21 @@
 ﻿
+<!DOCTYPE html>
 @{
     ViewData["Title"] = "Index";
 }
     <head>
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-        <link rel="Stylesheet" href="~/css/site.css" />
+        <link rel="stylesheet" href="~/css/site.css" type="text/css"/>
     </head>
 
     <body>
-        <input type="text" name="userId" id="loginId"/>
-
-        <button type="submit">Login</button>
-
+        @using (Html.BeginForm("Submit", "Login"))
+        {
+            <label for="loginEmailId">Emailadress:</label>
+            <input type="text" id="loginEmailId" runat="server" /><br>
+            <label for="loginPass">Password:</label>
+            <input type="text" id="loginPassId" runat="server" />
+            <input type="submit" value="Login" id="loginSubmit" runat="server">
+        }
     </body>
 
