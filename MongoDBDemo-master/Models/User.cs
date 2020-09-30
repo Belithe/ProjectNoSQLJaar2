@@ -13,7 +13,6 @@ namespace Models
         public string EmailAdress { get; set; }
         public long Phonenumber { get; set; }
         public string Location { get; set; }
-
-
+        public string Password { get; set; }
     }
 }

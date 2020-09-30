@@ -9,13 +9,13 @@
     </head>
 
     <body>
-        @using (Html.BeginForm("Submit", "Login"))
+        @using (Html.BeginForm("Submit", "Login", FormMethod.Get))
         {
             <label for="loginEmailId">Emailadress:</label>
-            <input type="text" id="loginEmailId" runat="server" /><br>
+            <input type="text" name="loginEmail" runat="server" /><br>
             <label for="loginPass">Password:</label>
-            <input type="text" id="loginPassId" runat="server" />
-            <input type="submit" value="Login" id="loginSubmit" runat="server">
+            <input type="password" name="loginPass" runat="server" />
+            <input type="submit" value="Login" name="loginSubmit" runat="server">
         }
     </body>
 

@@ -1,8 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Marvin.JsonPatch;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Models;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
+using WebAppClient.Helpers;
+using WebAppClient.Models;
+using WebAppClient.ViewModels;
 
 namespace WebAppClient.Controllers
 {
@@ -14,10 +22,39 @@ namespace WebAppClient.Controllers
         {
             return View();
         }
-        public RedirectToActionResult Submit()
+
+        [HttpGet]
+        public async Task<IActionResult> Submit()
         {
-            username = this.Request.Form["loginEmailId"];
-            return RedirectToAction("Index", "Home");
+            username = this.Request.Form["loginEmail"];
+            password = this.Request.Form["loginPass"];
+
+            HttpClient client = MVCClientHttpClient.GetClient();
+            HttpResponseMessage userResponse = await client.GetAsync("api/user/");
+
+            UsersVM AllUsersVM = new UsersVM();
+            if (userResponse.IsSuccessStatusCode)
+            {
+                string Content = await userResponse.Content.ReadAsStringAsync();
+                AllUsersVM.lstUser = JsonConvert.DeserializeObject<IEnumerable<User>>(Content);
+            }
+            else
+            {
+                Content("An error occurred.");
+            }
+
+            foreach (User user in AllUsersVM.lstUser) 
+            {
+                if(username == user.EmailAdress)
+                {
+                    if(password == user.Password)
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                    return RedirectToAction("Index", "Login");
+                }
+            }
+            return RedirectToAction("Index", "Login");
 
             
         }
