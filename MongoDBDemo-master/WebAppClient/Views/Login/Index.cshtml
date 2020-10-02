@@ -1,21 +1,17 @@
-﻿
+﻿@model WebAppClient.ViewModels.UserVM
+
 <!DOCTYPE html>
 @{
     ViewData["Title"] = "Index";
 }
-    <head>
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-        <link rel="stylesheet" href="~/css/site.css" type="text/css"/>
-    </head>
+<head>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" type="text/css" />
+</head>
 
-    <body>
-        @using (Html.BeginForm("Submit", "Login", FormMethod.Get))
-        {
-            <label for="loginEmailId">Emailadress:</label>
-            <input type="text" name="loginEmail" runat="server" /><br>
-            <label for="loginPass">Password:</label>
-            <input type="password" name="loginPass" runat="server" />
-            <input type="submit" value="Login" name="loginSubmit" runat="server">
-        }
-    </body>
+@using (Html.BeginForm())
+{
+    @Html.TextBoxFor(m => m.EmailAdress)
+    <button type="submit">Search</button>
+}
 

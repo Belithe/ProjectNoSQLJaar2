@@ -24,15 +24,15 @@ namespace WebAppClient.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Submit()
+        public async Task<IActionResult> Verify(User user)
         {
-            username = this.Request.Form["loginEmail"];
-            password = this.Request.Form["loginPass"];
+            username = user.EmailAdress; 
 
             HttpClient client = MVCClientHttpClient.GetClient();
             HttpResponseMessage userResponse = await client.GetAsync("api/user/");
 
             UsersVM AllUsersVM = new UsersVM();
+
             if (userResponse.IsSuccessStatusCode)
             {
                 string Content = await userResponse.Content.ReadAsStringAsync();
@@ -40,24 +40,52 @@ namespace WebAppClient.Controllers
             }
             else
             {
-                Content("An error occurred.");
+                return Content("An error occurred.");
             }
 
-            foreach (User user in AllUsersVM.lstUser) 
+            if (AllUsersVM.lstUser.Any(u => u.EmailAdress == user.EmailAdress && u.Password == user.Password)) {
+                return View("Home");
+            } else
             {
-                if(username == user.EmailAdress)
-                {
-                    if(password == user.Password)
-                    {
-                        return RedirectToAction("Index", "Home");
-                    }
-                    return RedirectToAction("Index", "Login");
-                }
+                return View("Login");
             }
-            return RedirectToAction("Index", "Login");
+
+        }
+
+        //public async Task<IActionResult> Submit()
+        //{
+        //    username = this.Request.Form["loginEmail"];
+        //    password = this.Request.Form["loginPass"];
+
+        //    HttpClient client = MVCClientHttpClient.GetClient();
+        //    HttpResponseMessage userResponse = await client.GetAsync("api/user/");
+
+        //    UsersVM AllUsersVM = new UsersVM();
+        //    if (userResponse.IsSuccessStatusCode)
+        //    {
+        //        string Content = await userResponse.Content.ReadAsStringAsync();
+        //        AllUsersVM.lstUser = JsonConvert.DeserializeObject<IEnumerable<User>>(Content);
+        //    }
+        //    else
+        //    {
+        //        Content("An error occurred.");
+        //    }
+
+        //    foreach (User user in AllUsersVM.lstUser) 
+        //    {
+        //        if(username == user.EmailAdress)
+        //        {
+        //            if(password == user.Password)
+        //            {
+        //                return RedirectToAction("Index", "Home");
+        //            }
+        //            return RedirectToAction("Index", "Login");
+        //        }
+        //    }
+        //    return RedirectToAction("Index", "Login");
 
             
-        }
+        //}
 
         
     }
