@@ -20,7 +20,7 @@
 <input type="button"
        id="filterButton"
        value="Filter"
-       onclick="location.href='@Url.Action("IndexFilter", "Ticket")'" />
+       onclick="location.href='@Url.Action("Index", "Ticket")'" />
 
 <table class="table">
     <thead>
@@ -52,7 +52,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Subject)
                 <td>
-                    @Html.DisplayFor(modelItem => item.User.FirstName)
+                    @Html.DisplayFor(modelItem => item.User)
                 <td>
                     @Html.ActionLink("Edit", "Edit", new { Id = item.Id }) |
                     @Html.ActionLink("Delete", "Delete", new { Id = item.Id })

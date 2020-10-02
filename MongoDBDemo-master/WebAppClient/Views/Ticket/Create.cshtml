@@ -27,7 +27,6 @@
 
 @using (Html.BeginForm())
 {
-    @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
         <h4>Add Ticket</h4>
@@ -55,11 +54,11 @@
             @Html.ValidationMessageFor(model => model.Type, "", new { @class = "text-danger" })
         </div>
 
-        @*@Html.LabelFor(model => model.Users, htmlAttributes: new { @class = "control-label col-md-2 box" })
+        @Html.LabelFor(model => model.User, htmlAttributes: new { @class = "control-label col-md-2 box" })
         <div class="col-md-10" style="margin-bottom: 1em">
-            @Html.DropDownListFor(model => model.Users, new SelectList(Model.Users))
-            @Html.ValidationMessageFor(model => model.Type, "", new { @class = "text-danger" })
-        </div>*@
+            @Html.DropDownListFor(model => model.User.FirstName, Model.UserList)
+            @Html.ValidationMessageFor(model => model.User, "", new { @class = "text-danger" })
+        </div>
 
         @Html.LabelFor(model => model.Priority, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10" style="margin-bottom: 1em">

@@ -1,5 +1,6 @@
 ﻿using Marvin.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Models;
 using Newtonsoft.Json;
 using System.Collections.Generic;
@@ -62,7 +63,16 @@ namespace WebAppClient.Controllers
             }
         }
 
+        public async Task<IEnumerable<User>> fillUsers() 
+        {
+            HttpClient client = MVCClientHttpClient.GetClient();
+            HttpResponseMessage userResponse = await client.GetAsync("api/user/");
 
+            string Content = await userResponse.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<IEnumerable<User>>(Content);
+
+            return result;
+        }
 
         public async Task<IActionResult> Search()
         {

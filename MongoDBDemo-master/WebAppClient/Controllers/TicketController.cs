@@ -11,6 +11,8 @@ using Models;
 using Marvin.JsonPatch;
 using WebAppClient.Models;
 using System.Diagnostics;
+using Remotion.Linq.Clauses;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace WebAppClient.Controllers
 {
@@ -63,34 +65,37 @@ namespace WebAppClient.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Index(string FilterDate, TicketsVM model)
+        public async Task<IActionResult> IndexFilter(TicketsVM model)
         {
+            model.OrderTrig = false;
+
             if (ModelState.IsValid)
             {
                 HttpClient client = MVCClientHttpClient.GetClient();
-                HttpResponseMessage userResponse = await client.GetAsync("api/Ticket/Search");
-                 
+                HttpResponseMessage userResponse = await client.GetAsync("api/Ticket/");
+               
                 if (userResponse.IsSuccessStatusCode)
                 {
                     string Content = await userResponse.Content.ReadAsStringAsync();
                     model.lstTickets = JsonConvert.DeserializeObject<IEnumerable<Ticket>>(Content);
 
-                    if (FilterDate == "Filter")
+                    var tickets = from t in model.lstTickets
+                                  select t;
+
+                    model.OrderTrig = true;
+
+                    if (model.OrderTrig) 
                     {
-                        ViewBag.filtering = true;
+                        model.lstTickets = tickets.OrderBy(x => x.Priority).ThenBy(x => x.DateTime);
                     }
-                    else
-                    {
-                        ViewBag.filtering = false;
-                    }
+
+                    return View(model);
                 }
+
                 else
                 {
                     return Content("An error occurred.");
                 }
-
-                return View(model);
             }
             else
             {
@@ -134,15 +139,26 @@ namespace WebAppClient.Controllers
             else
             {
                 return Content("Ticket not found.");
-            }
+           }
             return null;
         }
 
 
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             TicketVM ticketVM = new TicketVM();
+
+            HomeController controller = new HomeController();
+
+            var users = await controller.fillUsers();
+
+            var employees = from e in users
+                            where e.Type == UserEnum.Employee
+                            select e.FirstName;
+
+            ticketVM.UserList = new SelectList(employees);
+
             return View(ticketVM);
         }
 
@@ -181,7 +197,7 @@ namespace WebAppClient.Controllers
                 ticketVM.DateTime = foundTicket.DateTime;
                 ticketVM.Subject = foundTicket.Subject;
                 ticketVM.Type = foundTicket.Type;
-                ticketVM.User = foundTicket.User;
+                //ticketVM.User.FirstName = foundTicket.User.FirstName;
                 ticketVM.Priority = foundTicket.Priority;
                 ticketVM.Deadline = foundTicket.Deadline;
                 ticketVM.Description = foundTicket.Description;
@@ -199,7 +215,7 @@ namespace WebAppClient.Controllers
             patchDoc.Replace(e => e.DateTime, ticketVM.DateTime);
             patchDoc.Replace(e => e.Subject, ticketVM.Subject);
             patchDoc.Replace(e => e.Type, ticketVM.Type);
-            patchDoc.Replace(e => e.User, ticketVM.User);
+            patchDoc.Replace(e => e.User.FirstName, ticketVM.User.FirstName);
             patchDoc.Replace(e => e.Priority, ticketVM.Priority);
             patchDoc.Replace(e => e.Deadline, ticketVM.Deadline);
             patchDoc.Replace(e => e.Description, ticketVM.Description);
@@ -234,6 +250,16 @@ namespace WebAppClient.Controllers
             return Content("An error occurred.");
         }
 
+        public async Task<IEnumerable<Ticket>> fillTicket()
+        {
+            HttpClient client = MVCClientHttpClient.GetClient();
+            HttpResponseMessage userResponse = await client.GetAsync("api/ticket/");
+
+            string Content = await userResponse.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<IEnumerable<Ticket>>(Content);
+
+            return result;
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
