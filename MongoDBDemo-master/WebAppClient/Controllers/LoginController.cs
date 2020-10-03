@@ -1,5 +1,6 @@
 ﻿using Marvin.JsonPatch;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using Newtonsoft.Json;
@@ -8,30 +9,37 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Security.Principal;
 using WebAppClient.Helpers;
 using WebAppClient.Models;
 using WebAppClient.ViewModels;
+using static System.Net.WebRequestMethods;
 
 namespace WebAppClient.Controllers
 {
     public class LoginController : Controller
     {
-        public string username;
-        public string password;
+        public string errorMessage = "";
         public IActionResult Index()
         {
+            //if (!string.IsNullOrEmpty((string)TempData["ErrorMessage"]))
+            //{
+            //    errorMessage = (string)TempData["ErrorMessage"];
+            //}
+            //ViewBag.Error = errorMessage;
             return View();
+
         }
 
         [HttpPost]
         public async Task<IActionResult> Verify(User user)
-        {
-            username = user.EmailAdress; 
+        { 
 
             HttpClient client = MVCClientHttpClient.GetClient();
             HttpResponseMessage userResponse = await client.GetAsync("api/user/");
 
             UsersVM AllUsersVM = new UsersVM();
+
 
             if (userResponse.IsSuccessStatusCode)
             {
@@ -43,9 +51,12 @@ namespace WebAppClient.Controllers
                 return Content("An error occurred.");
             }
 
-            if (AllUsersVM.lstUser.Any(u => u.EmailAdress == user.EmailAdress && u.Password == user.Password)) {
+            try
+            {               
+                HttpContext.User = new GenericPrincipal(new GenericIdentity(user.EmailAdress), new string[] { AllUsersVM.lstUser.Where(u => u.EmailAdress == user.EmailAdress && u.Password == user.Password).ToList()[0].Type.ToString() });
                 return View("~/Views/Home/Index.cshtml", AllUsersVM);
-            } else
+            }
+            catch
             {
                 return View("Index");
             }
