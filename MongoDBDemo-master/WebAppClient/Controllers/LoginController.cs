@@ -23,7 +23,7 @@ namespace WebAppClient.Controllers
             return View();
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> Verify(User user)
         {
             username = user.EmailAdress; 
@@ -44,10 +44,10 @@ namespace WebAppClient.Controllers
             }
 
             if (AllUsersVM.lstUser.Any(u => u.EmailAdress == user.EmailAdress && u.Password == user.Password)) {
-                return View("Home");
+                return View("~/Views/Home/Index.cshtml", AllUsersVM);
             } else
             {
-                return View("Login");
+                return View("Index");
             }
 
         }
