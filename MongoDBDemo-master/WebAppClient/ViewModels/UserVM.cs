@@ -35,5 +35,8 @@ namespace WebAppClient.ViewModels
 
         [DisplayName("Location: ")]
         public string Location { get; set; }
+
+        [DisplayName("Password: ")]
+        public string Password { get; set; }
     }
 }

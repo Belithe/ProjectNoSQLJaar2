@@ -1,4 +1,5 @@
 ﻿using Marvin.JsonPatch;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Models;
@@ -172,6 +173,7 @@ namespace WebAppClient.Controllers
                 userVM.Location = foundUser.Location;
                 userVM.EmailAdress = foundUser.EmailAdress;
                 userVM.PhoneNumber = foundUser.Phonenumber;
+                userVM.Password = foundUser.Password;
 
                 return View(userVM);
             }
@@ -189,6 +191,7 @@ namespace WebAppClient.Controllers
             patchDoc.Replace(e => e.Location, userVM.Location);
             patchDoc.Replace(e => e.EmailAdress, userVM.EmailAdress);
             patchDoc.Replace(e => e.Phonenumber, userVM.PhoneNumber);
+            patchDoc.Replace(e => e.Password, userVM.Password);
 
             //serialize patch
             var serializedPatch = JsonConvert.SerializeObject(patchDoc);

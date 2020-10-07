@@ -1,0 +1,20 @@
+﻿@model WebAppClient.ViewModels.UserVM
+
+<!DOCTYPE html>
+@{
+    ViewData["Title"] = "Index";
+}
+<head>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" type="text/css" />
+</head>
+
+
+
+@using (Html.BeginForm("Verify", "Login", FormMethod.Post))
+{
+    @Html.TextBoxFor(m => m.EmailAdress, new { placeholder = "E-Mail", required = "required" })
+    @Html.TextBoxFor(m => m.Password, new { placeholder = "Password", required = "required" })
+    <button type="submit">Login</button>
+}
+

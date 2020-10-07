@@ -5,11 +5,14 @@
 <h2>All Users</h2>
 
 <p>
-    @Html.ActionLink("Add New User", "Create")
+    @if (ViewContext.HttpContext.User.IsInRole("Employee")) {
+        @Html.ActionLink("Add New User", "Create")
+    }
 </p>
 
 @using (Html.BeginForm())
 {
+
     @Html.TextBoxFor(x => x.TextSearch, new { placeholder = "Search", required = "required" })
     @Html.ValidationMessageFor(x => x.TextSearch)
     <button type="submit">Search</button>
@@ -60,8 +63,10 @@
         @Html.DisplayFor(modelItem => item.Location)
     </td>
     <td>
-        @Html.ActionLink("Edit", "Edit", new { Id = item.Id }) |
-        @Html.ActionLink("Delete", "Delete", new { Id = item.Id })
+        @if (ViewContext.HttpContext.User.IsInRole("Employee")) {
+            @Html.ActionLink("Edit", "Edit", new { Id = item.Id }) 
+            @Html.ActionLink("Delete", "Delete", new { Id = item.Id });
+        }
     </td>
 </tr>}
 
