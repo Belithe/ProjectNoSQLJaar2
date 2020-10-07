@@ -9,5 +9,8 @@ namespace WebAppClient.ViewModels
     public class TicketsVM
     {
         public IEnumerable<Ticket> lstTickets { get; set; }
+        public string TextSearch { get; set; }
+
+        public bool OrderTrig { get; set; }
     }
 }

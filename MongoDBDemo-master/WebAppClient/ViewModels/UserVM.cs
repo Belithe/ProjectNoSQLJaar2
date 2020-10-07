@@ -26,6 +26,10 @@ namespace WebAppClient.ViewModels
         [DisplayName("Email: ")]
         public string EmailAdress { get; set; }
 
+        [DisplayName("Password: ")]
+        public string Password { get; set; }
+
+
         [DisplayName("Phone number: ")]
         public long PhoneNumber { get; set; }
 
